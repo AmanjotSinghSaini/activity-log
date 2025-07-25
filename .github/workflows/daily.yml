@@ -1,0 +1,34 @@
+name: Daily Contribution Commit
+
+on:
+  schedule:
+    - cron: '0 8 * * *'  # Runs daily at 8 AM UTC
+  workflow_dispatch:       # Allows manual trigger
+
+jobs:
+  commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Append current date to activity log
+        run: |
+          echo "Updated at $(date)" >> activity.txt
+
+      - name: Configure Git identity
+        run: |
+          git config --global user.name "Amanjot Singh Saini"
+          git config --global user.email "amanjot1503@gmail.com"
+
+      - name: Commit changes
+        run: |
+          git add activity.txt
+          git commit -m " Daily update: $(date)" || echo "No changes to commit"
+      
+      - name: Push to repository
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:main
