@@ -2,7 +2,7 @@ name: Daily Contribution Commit
 
 on:
   schedule:
-    - cron: '0 8 * * *'  # Daily at 8 AM UTC
+    - cron: '0 8 * * *'  # 8 AM UTC daily
   workflow_dispatch:
 
 jobs:
@@ -10,22 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Append current date to activity log
+      - name: Set current date
         run: echo "Updated at $(date)" >> activity.txt
 
-      - name: Configure Git identity and commit
+      - name: Configure Git
+        run: |
+          git config user.name "Amanjot Singh Saini"
+          git config user.email "amanjot1503@gmail.com"
+
+      - name: Commit changes
+        run: |
+          git add activity.txt
+          git commit --author="Amanjot Singh Saini <amanjot1503@gmail.com>" -m "Daily update: $(date)" || echo "No changes to commit"
+
+      - name: Push to GitHub with PAT
         env:
-          GIT_AUTHOR_NAME: Amanjot Singh Saini
-          GIT_AUTHOR_EMAIL: amanjot1503@gmail.com
-          GIT_COMMITTER_NAME: Amanjot Singh Saini
-          GIT_COMMITTER_EMAIL: amanjot1503@gmail.com
           PERSONAL_PAT: ${{ secrets.PERSONAL_PAT }}
         run: |
-          git config user.name "$GIT_COMMITTER_NAME"
-          git config user.email "$GIT_COMMITTER_EMAIL"
-          git add activity.txt
-          git commit --author="$GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>" -m "Daily update: $(date)" || echo "No changes to commit"
           git push https://$PERSONAL_PAT@github.com/AmanjotSinghSaini/activity-log.git HEAD:main
