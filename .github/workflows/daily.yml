@@ -21,8 +21,8 @@ jobs:
     
     - name: Commit and push
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "Daily Activity Bot"
+        git config --local user.email "amanjot1503@gmail.com"
+        git config --local user.name "AmanjotSinghSaini"
         git add activity.txt
         git commit -m "Daily activity: $(date '+%Y-%m-%d')"
         git push
