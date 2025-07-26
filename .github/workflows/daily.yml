@@ -1,28 +1,38 @@
-name: Daily Activity
+name: Daily Green Box Commit
+
 on:
   schedule:
-    # Runs every day at 9:00 AM UTC (change time as needed)
-    - cron: '0 9 * * *'
-  workflow_dispatch: # Allows manual trigger for testing
+    # Runs at 5:00 AM UTC every day. You can change the time.
+    # Use crontab.guru to help generate your cron syntax.
+    - cron: '0 5 * * *'
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
 jobs:
-  update-activity:
+  daily-commit:
     runs-on: ubuntu-latest
-    
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-      with:
-        token: ${{ secrets.PERSONAL_PAT }}
-    
-    - name: Update activity file
-      run: |
-        echo "Activity updated on: $(date '+%Y-%m-%d %H:%M:%S UTC')" >> activity.txt
-    
-    - name: Commit and push
-      run: |
-        git config --local user.email "amanjot1503@gmail.com"
-        git config --local user.name "AmanjotSinghSaini"
-        git add activity.txt
-        git commit -m "Daily activity: $(date '+%Y-%m-%d')"
-        git push
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Use the PAT to gain push access
+          token: ${{ secrets.PERSONAL_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          # Replace with your GitHub username and the email linked to your account
+          git config --global user.name 'AmanjotSinghSaini'
+          git config --global user.email 'amanjot1503@gmail.com'
+
+      - name: Create or Update a File
+        run: |
+          # This command creates or overwrites a file with the current date and time
+          echo "Last updated on $(date)" > last_updated.md
+
+      - name: Commit and Push Changes
+        run: |
+          git add last_updated.md
+          # Commit the changes with a message
+          git commit -m "feat: Automated daily update" -a || echo "No changes to commit"
+          # Push the changes to the default branch
+          git push
+
