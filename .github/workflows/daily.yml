@@ -1,10 +1,10 @@
 name: Daily Green Box Commit
 
 on:
-  schedule:
+  #schedule:
     # Runs at 5:00 AM UTC every day. You can change the time.
     # Use crontab.guru to help generate your cron syntax.
-    - cron: '0 5 * * *'
+    #- cron: '0 5 * * *'
   workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
 
 jobs:
